@@ -1,11 +1,16 @@
 <?php
-session_start(); // Inicia la sesión
+require_once '../models/Lista.php';
 
 class ListaController {
     private $conexion;
 
     public function __construct($conexion) {
         $this->conexion = $conexion;
+
+        // Iniciar la sesión si no está ya iniciada
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     public function index() {
@@ -38,7 +43,6 @@ class ListaController {
                 }
             }
 
-            require_once '../models/Lista.php';
             $listaModel = new Lista($this->conexion);
             $listaModel->createLista($usuario_id, $nombre, $descripcion, $publica, $imagen, $tipo_imagen);
 
@@ -52,18 +56,17 @@ class ListaController {
     }
 
     public function agregarProducto() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $lista_id = $_POST['lista_id'];
-            $producto_id = $_POST['producto_id'];
-            $nombre = $_POST['nombre'];
-            $descripcion = $_POST['descripcion'];
-            $precio = $_POST['precio'];
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $lista_id = $_GET['lista_id'];
+            $producto_id = $_GET['producto_id'];
+            $nombre = $_GET['nombre'];
+            $descripcion = $_GET['descripcion'];
+            $precio = $_GET['precio'];
 
-            require_once '../models/Lista.php';
             $listaModel = new Lista($this->conexion);
             $listaModel->addProductoToLista($lista_id, $producto_id, $nombre, $descripcion, $precio);
 
-            header('Location: /mi_tienda_virtual/public/index.php?page=lista');
+            header("Location: /mi_tienda_virtual/views/listas/detalle.php?id=$lista_id");
             exit();
         }
     }
@@ -71,7 +74,24 @@ class ListaController {
     // Método para obtener listas
     public function obtenerListas() {
       $this->index();
-    }      
+    }
+
+    public function obtenerListasArr() {
+      if (!isset($_GET['id'])) {
+        echo json_encode([]);
+        exit();
+      }
+
+      $listaModel = new Lista($this->conexion);
+      $listas = $listaModel->getAllListasByUsuario($_GET['id']);
+
+      header('Content-Type: application/json');
+      echo json_encode($listas);
+    }
+    
+    public function detalle() {
+      header('Location: /mi_tienda_virtual/views/listas/detalle.php?id='.$_GET['id']);
+    }
     
     // Método para agregar producto a una lista
     public function agregarProductoALista() {
@@ -79,7 +99,6 @@ class ListaController {
             $lista_id = $_POST['lista_id'];
             $producto_id = $_POST['producto_id'];
 
-            require_once '../models/Lista.php';
             $listaModel = new Lista($this->conexion);
             $listaModel->addProductoToLista($lista_id, $producto_id);
 
@@ -97,7 +116,6 @@ class ListaController {
             $lista_id = $_POST['lista_id'];
             $producto_id = $_POST['producto_id'];
 
-            require_once '../models/Lista.php';
             $listaModel = new Lista($this->conexion);
             $listaModel->removeProductoFromLista($lista_id, $producto_id);
 

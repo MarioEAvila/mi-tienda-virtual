@@ -428,6 +428,12 @@ nav ul li a:hover {
     padding: 0;
 }
 
+.list-group table td {
+  padding: 5px 10px;
+  text-align: center; 
+  vertical-align: middle
+}
+
 .list-group-item {
     background-color: #fff;
     border: 1px solid #ccc;
@@ -493,6 +499,18 @@ nav ul li a:hover {
     cursor: pointer;
 }
 
+.carrito-imagen {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid gray;
+  border-radius: 10px;
+}
+
+.carrito-total {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
 
 /* Animations */
 @keyframes fadeIn {

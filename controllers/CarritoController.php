@@ -14,6 +14,10 @@ class CarritoController {
         $this->carritoModel = new Carrito($this->conexion);
     }
 
+    public function index() {
+      header('Location: /mi_tienda_virtual/views/carrito/listado.php');
+    }
+
     public function agregarAlCarrito() {
         if (!isset($_SESSION['id_usuario'])) {
             header('Content-Type: application/json');
@@ -62,17 +66,5 @@ class CarritoController {
         header('Content-Type: application/json');
         echo json_encode(['total_cantidad' => $total_cantidad]);
     }
-}
-
-// Crear instancia del controlador y llamar al método correspondiente
-$controller = new CarritoController();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller->agregarAlCarrito();
-} elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'obtenerCantidad') {
-    $controller->obtenerCantidadProductos();
-} else {
-    header('Content-Type: application/json');
-    echo json_encode(['error' => 'Método no permitido']);
 }
 ?>

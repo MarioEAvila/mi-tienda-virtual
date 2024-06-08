@@ -9,6 +9,7 @@ if (!isset($_SESSION['id_usuario'])) {
 }
 require_once '../views/templates/header.php';
 require_once '../models/Producto.php';
+require_once '../models/Lista.php';
 require_once '../config/database.php'; // Asegúrate de tener este archivo configurado correctamente
 
 $database = new Database();
@@ -52,6 +53,47 @@ $productoModel = new Producto($conexion);
                         </div>
                     <?php endforeach; ?>
                 </div>
+                <script>
+                  function agregarAlCarrito(productoId) {
+                      const promise = Promise.race([
+                        fetch('/mi_tienda_virtual/public/index.php?page=carrito&action=agregarAlCarrito', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: 'producto_id=' + productoId
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.total_cantidad) {
+                                document.getElementById('carrito-cantidad').innerText = data.total_cantidad;
+                            } else if (data.error) {
+                                alert('Error: ' + data.error);
+                            }
+                        })
+                        .catch(error => console.error('Error adding to cart:', error)),
+                        new Promise((_, reject) =>
+                          setTimeout(() => reject(new Error('timeout')), 2000)
+                        ).catch(err => console.error(err)),
+                      ]);
+                      return promise;
+                  }
+
+                  document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
+                      button.addEventListener('click', () => {
+                          const productoId = button.getAttribute('data-producto-id');
+                          agregarAlCarrito(productoId);
+                      });
+                  });
+                </script>
+                <script>
+                  document.querySelectorAll('.btn-agregar-lista').forEach(button => {
+                      button.addEventListener('click', function() {
+                          const productoId = this.getAttribute('data-producto-id');
+                          window.location.href = '/mi_tienda_virtual/views/listas/agregar.php?id='+productoId;
+                        });
+                    });
+                </script>
             <?php else: ?>
                 <p>No hay productos disponibles.</p>
             <?php endif;
@@ -69,33 +111,7 @@ $productoModel = new Producto($conexion);
         <!-- Aquí se cargarán las listas del usuario -->
     </div>
 </div>
+<!-- <script src="/mi_tienda_virtual/public/js/modal.js"></script> -->
 
 <?php require_once '../views/templates/footer.php'; ?>
-<script src="/mi_tienda_virtual/public/js/modal.js"></script>
-<script>
-function agregarAlCarrito(productoId) {
-    fetch('/mi_tienda_virtual/controllers/CarritoController.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'producto_id=' + productoId
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.total_cantidad !== undefined) {
-            document.getElementById('carrito-cantidad').innerText = data.total_cantidad;
-        } else if (data.error) {
-            alert('Error: ' + data.error);
-        }
-    })
-    .catch(error => console.error('Error adding to cart:', error));
-}
 
-document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
-    button.addEventListener('click', () => {
-        const productoId = button.getAttribute('data-producto-id');
-        agregarAlCarrito(productoId);
-    });
-});
-</script>

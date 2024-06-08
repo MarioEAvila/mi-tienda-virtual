@@ -29,41 +29,11 @@ if (session_status() == PHP_SESSION_NONE) {
 </nav>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
     // Obtener la cantidad de productos en el carrito al cargar la página
-    fetch('/mi_tienda_virtual/controllers/CarritoController.php?action=obtenerCantidad')
+    fetch('/mi_tienda_virtual/public/index.php?page=carrito&action=obtenerCantidadProductos')
         .then(response => response.json())
         .then(data => {
             document.getElementById('carrito-cantidad').innerText = data.total_cantidad;
         })
         .catch(error => console.error('Error fetching cart quantity:', error));
-});
-</script>
-
-<!-- Coloca el script al final del archivo -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('/mi_tienda_virtual/public/api.php?action=getWeatherAndTime')
-            .then(response => {
-                return response.text(); // Obtener la respuesta como texto primero
-            })
-            .then(text => {
-                console.log('Raw response: ' + text); // Log de la respuesta cruda
-                try {
-                    const data = JSON.parse(text); // Intentar parsear el JSON
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
-                    document.getElementById('hora').innerText = data.time;
-                    document.getElementById('clima').innerText = `${data.weather}, ${data.temperature}°C`;
-                } catch (e) {
-                    console.error('Error parsing JSON:', e);
-                    alert('Error fetching weather and time data: ' + e.message);
-                }
-            })
-            .catch(error => {
-                alert('Error fetching weather and time data: ' + error);
-                console.error('Error fetching weather and time data:', error);
-            });
-    });
 </script>

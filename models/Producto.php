@@ -20,6 +20,28 @@ class Producto {
         return $stmt->fetchAll();
     }
 
+    public function getProductosByCart($usuario_id) {
+        $query = "SELECT p.*, ci.cantidad
+          FROM productos p 
+          INNER JOIN carrito_items ci ON p.id = ci.producto_id 
+          INNER JOIN carrito c ON c.id = ci.carrito_id 
+          WHERE c.usuario_id = ?";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->execute([$usuario_id]);
+        return $stmt->fetchAll();
+    }
+
+    public function getProductosByLista($lista_id) {
+      $query = "SELECT p.*
+      FROM productos p 
+      INNER JOIN listas_productos lp ON p.id = lp.producto_id 
+      INNER JOIN listas l ON l.id = lp.lista_id 
+      WHERE l.id = ?";
+      $stmt = $this->conexion->prepare($query);
+      $stmt->execute([$lista_id]);
+      return $stmt->fetchAll();
+    } 
+
     public function getProductoById($id) {
         $sql = "SELECT p.*, u.username AS vendedor_nombre FROM productos p 
                 JOIN usuario u ON p.vendedor_id = u.id_usuario WHERE p.id = ?";
