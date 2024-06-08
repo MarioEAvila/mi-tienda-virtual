@@ -80,12 +80,7 @@ class ProductoController {
     }
 
     public function dashboard() {
-        $productoModel = new Producto($this->conexion);
-        $productos = $productoModel->getAllProductos();
-        
-        require_once '../views/templates/header.php';
-        require_once '../views/dashboard.php';
-        require_once '../views/templates/footer.php';
+        header('Location: /mi_tienda_virtual/views/dashboard.php');
     }
 }
 ?>

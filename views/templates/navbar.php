@@ -14,9 +14,9 @@ if (session_status() == PHP_SESSION_NONE) {
                     Carrito de Compras (<span id="carrito-cantidad">0</span>)
                 </a>
             </li>
+            <li><a href="/mi_tienda_virtual/public/index.php?page=lista">Mis Listas</a></li>
+            <li><a href="/mi_tienda_virtual/public/index.php?page=lista&action=crear">Crear Lista</a></li> <!-- Agregando la opción para crear una lista -->
             <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 'vendedor' || $_SESSION['rol'] == 'administrador')): ?>
-                <li><a href="/mi_tienda_virtual/public/index.php?page=lista">Mis Listas</a></li>
-                <li><a href="/mi_tienda_virtual/public/index.php?page=lista&action=crear">Crear Lista</a></li> <!-- Agregando la opción para crear una lista -->
                 <li><a href="/mi_tienda_virtual/public/index.php?page=producto&action=publicarProducto">Publicar Producto</a></li>
             <?php endif; ?>
         <?php else: ?>

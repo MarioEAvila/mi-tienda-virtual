@@ -25,11 +25,10 @@ $productoModel = new Producto($conexion);
             <button type="submit">Buscar</button>
         </form>
         <ul>
-            <li><a href="/mi_tienda_virtual/public/index.php?page=mis_listas">Mis Listas</a></li>
-            <li><a href="/mi_tienda_virtual/public/index.php?page=mis_productos">Mis Productos</a></li>
+            <li><a href="/mi_tienda_virtual/public/index.php?page=lista&action=obtenerListas">Mis Listas</a></li>
+            <li><a href="/mi_tienda_virtual/public/index.php?page=lista&action=crear">Crear Lista</a></li>
             <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 'vendedor' || $_SESSION['rol'] == 'administrador')): ?>
-                <li><a href="/mi_tienda_virtual/public/index.php?page=crear_lista">Crear Lista</a></li>
-                <li><a href="/mi_tienda_virtual/public/index.php?page=publicar_producto">Publicar Producto</a></li>
+                <li><a href="/mi_tienda_virtual/public/index.php?page=producto&action=publicarProducto">Publicar Producto</a></li>
             <?php endif; ?>
         </ul>
     </aside>

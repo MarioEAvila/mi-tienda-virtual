@@ -9,19 +9,7 @@ class ListaController {
     }
 
     public function index() {
-        if (!isset($_SESSION['id_usuario'])) {
-            header('Location: /mi_tienda_virtual/public/index.php?page=login');
-            exit();
-        }
-
-        require_once '../models/Lista.php';
-
-        $listaModel = new Lista($this->conexion);
-        $listas = $listaModel->getAllListasByUsuario($_SESSION['id_usuario']);
-        
-        require_once '../views/templates/header.php';
-        require_once '../views/listas/listado.php';
-        require_once '../views/templates/footer.php';
+      header('Location: /mi_tienda_virtual/views/listas/listado.php');
     }
 
     public function crear() {
@@ -82,22 +70,7 @@ class ListaController {
 
     // Método para obtener listas
     public function obtenerListas() {
-        if (!isset($_SESSION['id_usuario'])) {
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'Usuario no autenticado']);
-            exit();
-        }
-    
-        require_once '../models/Lista.php';
-    
-        $listaModel = new Lista($this->conexion);
-        $listas = $listaModel->getAllListasByUsuario($_SESSION['id_usuario']);
-    
-        // Depuración: Log para verificar el contenido de $listas
-        error_log("Listas obtenidas: " . print_r($listas, true));
-    
-        header('Content-Type: application/json');
-        echo json_encode($listas);
+      $this->index();
     }      
     
     // Método para agregar producto a una lista

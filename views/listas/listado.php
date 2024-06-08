@@ -1,4 +1,22 @@
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/mi_tienda_virtual/views/templates/header.php'; ?>
+<!-- views/dashboard.php -->
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['id_usuario'])) {
+    header('Location: /mi_tienda_virtual/public/index.php?page=login');
+    exit();
+}
+require_once '../../views/templates/header.php';
+require_once '../../models/Lista.php';
+require_once '../../config/database.php'; // Asegúrate de tener este archivo configurado correctamente
+
+$database = new Database();
+$conexion = $database->connect();
+
+$listasModel = new Lista($conexion);
+$listas = $listasModel->getAllListasByUsuario($_SESSION['id_usuario']);
+?>
 
 <div class="container">
     <h2>Mis Listas</h2>
@@ -22,4 +40,4 @@
     </ul>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/mi_tienda_virtual/views/templates/footer.php'; ?>
+<?php require_once '../../views/templates/footer.php'; ?>
